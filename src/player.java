@@ -76,16 +76,6 @@ public class player
         }
     }
 
-    void merge()
-    {
-
-        ArrayList<Comparator> mergeList = new ArrayList<Comparator>();
-
-        fillMergeList(mergeList);
-
-        mergeCheck(mergeList);
-    }
-
     void fillMergeList(ArrayList<Comparator> compareList)
     {
         compareList.clear();
@@ -107,47 +97,55 @@ public class player
                 }
             }
         }
-        else
-        {
-            return;
-        }
     }
 
-    void mergeCheck(ArrayList<Comparator> compareList)
+    void merge()
     {
-        int i = 0, j, k;
-        while (i < compareList.size() && compareList.size() >= 3)
+        ArrayList<Comparator> mergeList = new ArrayList<Comparator>();
+
+        fillMergeList(mergeList);
+
+        int i = 0, j;
+        while (i < mergeList.size() && mergeList.size() >= 3)
         {
             j = i + 1;
 
-            while (j < compareList.size())
-            {
-                if (compareList.get(i).match(compareList.get(j)))
-                {
-                    k = j + 1;
-                    while (k < compareList.size())
-                    {
-                        if (compareList.get(i).match(compareList.get(k)))
-                        {
-                            compareList.get(i).getPawn().tierUp();
-                            compareList.get(k).destroyPawn();
-                            compareList.get(j).destroyPawn();
+            mergeCheck(mergeList, i, j);
 
-                            fillMergeList(compareList);
-                            //return;
-                        }
-                        else
-                        {
-                            k++;
-                        }
+            i++;
+        }
+    }
+
+    void mergeCheck(ArrayList<Comparator> mergeList, int i, int j)
+    {
+        int k;
+        while (j < mergeList.size())
+        {
+            if (mergeList.get(i).match(mergeList.get(j)))
+            {
+                k = j + 1;
+                while (k < mergeList.size())
+                {
+                    if (mergeList.get(i).match(mergeList.get(k)))
+                    {
+                        mergeList.get(i).getPawn().tierUp();
+                        mergeList.get(k).destroyPawn();
+                        mergeList.get(j).destroyPawn();
+
+                        fillMergeList(mergeList);
+                        return;
+                    }
+                    else
+                    {
+                        k++;
                     }
                 }
-                else
-                {
-                    j++;
-                }
+                return;
             }
-            i++;
+            else
+            {
+                j++;
+            }
         }
     }
 

@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicScrollBarUI;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,7 +11,10 @@ class Menu extends JFrame
     Player player;
     HeaderPanel headerPanel;
     SidebarPanel sidebarPanel;
+    ///Center panel
     CenterPanel centerPanel;
+    ManagePanel managePanel;
+    UnitStatsPanel unitStatsPanel;
 
     Menu(Player player)
     {
@@ -67,7 +72,11 @@ class Menu extends JFrame
 
     class SidebarPanel extends JPanel
     {
+        ButtonGroup northButtonGroup;
         SidebarButton buttonFight;
+        SidebarButton buttonManage;
+        SidebarButton buttonList;
+        //
         SidebarButton buttonExit;
 
         SidebarPanel()
@@ -75,22 +84,88 @@ class Menu extends JFrame
             this.setBackground(Color.gray);
             this.setPreferredSize(new Dimension(100, 0));
             this.setLayout(new BorderLayout());
-            this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            //this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+            JLabel sidebarNorth = new JLabel();
+            sidebarNorth.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+            sidebarNorth.setPreferredSize(new Dimension(100, 500));
 
             buttonFight = new SidebarButton("FIGHT");
             buttonFight.addActionListener(actionFight);
+
+            buttonManage = new SidebarButton("MANAGE");
+            buttonManage.addActionListener(actionManage);
+
+            buttonList = new SidebarButton("LIST");
+            buttonList.addActionListener(actionList);
+
+            northButtonGroup = new ButtonGroup();
+            northButtonGroup.add(buttonFight);
+            northButtonGroup.add(buttonManage);
+            northButtonGroup.add(buttonList);
+
+            sidebarNorth.add(buttonFight);
+            sidebarNorth.add(buttonManage);
+            sidebarNorth.add(buttonList);
+
+            JLabel sidebarSouth = new JLabel();
+            sidebarSouth.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+            sidebarSouth.setPreferredSize(new Dimension(100, 100));
+
             buttonExit = new SidebarButton("EXIT");
             buttonExit.addActionListener(actionExit);
 
-            this.add(buttonFight, BorderLayout.NORTH);
-            this.add(buttonExit, BorderLayout.SOUTH);
+            sidebarSouth.add(buttonExit);
+
+            this.add(sidebarNorth, BorderLayout.NORTH);
+            this.add(sidebarSouth, BorderLayout.SOUTH);
         }
 
         ActionListener actionFight = new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
-                System.out.println("FIGHT");
+                centerPanel.removeAll();
+                centerPanel.revalidate();
+                centerPanel.repaint();
+                ////
+                JLabel fightTest = new JLabel("FIGHT", JLabel.CENTER);//debug
+                fightTest.setFont(new Font("Haettenschweiler", Font.PLAIN, 40));
+                centerPanel.add(fightTest);//debug
+            }
+        };
+        ActionListener actionManage = new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                centerPanel.removeAll();
+                centerPanel.revalidate();
+                centerPanel.repaint();
+                ////
+                if (managePanel == null)
+                {
+                    managePanel = new ManagePanel();
+                }
+                centerPanel.add(managePanel);
+                centerPanel.revalidate();
+                centerPanel.repaint();
+            }
+        };
+        ActionListener actionList = new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                centerPanel.removeAll();
+                centerPanel.revalidate();
+                centerPanel.repaint();
+                ////
+                if (unitStatsPanel == null)
+                {
+                    unitStatsPanel = new UnitStatsPanel();
+                }
+                centerPanel.add(unitStatsPanel);
+                centerPanel.revalidate();
+                centerPanel.repaint();
             }
         };
         ActionListener actionExit = new ActionListener()
@@ -101,7 +176,7 @@ class Menu extends JFrame
             }
         };
 
-        class SidebarButton extends JButton
+        class SidebarButton extends JToggleButton
         {
             SidebarButton(String name)
             {
@@ -123,9 +198,6 @@ class Menu extends JFrame
             this.setLayout(new GridLayout());
             this.setBackground(Color.lightGray);
             this.setBorder(BorderFactory.createMatteBorder(5, 5, 0, 0, new Color(0xfdf800)));
-
-            ManagePanel managePanel = new ManagePanel();
-            this.add(managePanel);
         }
     }
 
@@ -141,7 +213,7 @@ class Menu extends JFrame
         ManagePanel()
         {
             this.setLayout(new FlowLayout());
-            this.setBackground(Color.lightGray);
+            this.setOpaque(false);
 
             board = new PawnsLabel(titles.board);
             bench = new PawnsLabel(titles.bench);
@@ -420,6 +492,95 @@ class Menu extends JFrame
                     }
                 }
             }
+        }
+    }
+
+    class UnitStatsPanel extends JPanel
+    {
+        UnitStatsPanel()
+        {
+            this.setOpaque(false);
+            this.setLayout(new BorderLayout());
+            this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+            ArrayList<Pawn> statsList = new ArrayList<>();
+            statsList.add(new Pawn1());
+            statsList.add(new Pawn2());
+            statsList.add(new Pawn3());
+            statsList.add(new Pawn4());
+
+            String[] columnNames = {"NAME", "HEALTH", "MANA", "DAMAGE", "COST"};
+
+            Object[][] data = new Object[statsList.size()][columnNames.length];
+
+            for (int i = 0; i < statsList.size(); i++)
+            {
+                data[i][0] = statsList.get(i).name;
+                data[i][1] = statsList.get(i).defaultHealth;
+                data[i][2] = statsList.get(i).defaultMana;
+                data[i][3] = statsList.get(i).defaultDamage;
+                data[i][4] = statsList.get(i).defaultCost;
+            }
+
+            DefaultTableModel tableModel = new DefaultTableModel(data, columnNames)
+            {
+                @Override
+                public boolean isCellEditable(int row, int column)//disables editing cells
+                {
+                    return false;
+                }
+
+                @Override
+                public Class getColumnClass(int column)//makes row sorter actually work
+                {
+                    switch (column)
+                    {
+                        case 1, 2, 3, 4 -> {
+
+                            return Integer.class;
+                        }
+                        default -> {
+                            return String.class;
+                        }
+                    }
+                }
+            };
+
+            JTable table = new JTable(tableModel);
+            table.setFillsViewportHeight(true);
+            table.setBackground(Color.lightGray);
+            table.setFont(new Font("Haettenschweiler", Font.PLAIN, 40));
+            table.setRowHeight(table.getRowHeight() + 40);
+            table.setGridColor(Color.black);
+            table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            table.setAutoCreateRowSorter(true);
+
+            table.getTableHeader().setReorderingAllowed(false);
+            table.getTableHeader().setResizingAllowed(false);
+            table.getTableHeader().setFont(new Font("Haettenschweiler", Font.PLAIN, 50));
+            table.getTableHeader().setBackground(Color.darkGray);
+            table.getTableHeader().setForeground(new Color(0xfdf800));
+
+            JScrollPane scrollPane = new JScrollPane(table);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            scrollPane.setBorder(BorderFactory.createLineBorder(Color.black, 5));
+            scrollPane.getVerticalScrollBar().setBackground(Color.darkGray);
+            scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI()
+            {
+                @Override
+                protected void configureScrollBarColors()
+                {
+                    this.thumbColor = new Color(0xfdf800);
+                }
+            });
+
+            scrollPane.getVerticalScrollBar().getComponent(0).setBackground(new Color(0xfdf800));
+            scrollPane.getVerticalScrollBar().getComponent(1).setBackground(new Color(0xfdf800));
+            JPanel cornerColorPanel = new JPanel();
+            cornerColorPanel.setBackground(Color.darkGray);
+            scrollPane.setCorner(JScrollPane.UPPER_RIGHT_CORNER, cornerColorPanel);
+
+            this.add(scrollPane, BorderLayout.CENTER);
         }
     }
 }

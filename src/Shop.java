@@ -1,15 +1,15 @@
 import java.util.ArrayList;
 import java.util.Random;
 
-public class shop
+public class Shop
 {
-    player owner;//owner reference
+    Player owner;//owner reference
     int gold = 50;
     final int shopMax = 5;
     final int refreshCost = 2;
-    ArrayList<pawn> shop;
+    ArrayList<Pawn> shop;
 
-    shop(player owner)
+    Shop(Player owner)
     {
         this.owner = owner;
         shop = new ArrayList<>();
@@ -27,32 +27,47 @@ public class shop
             {
                 switch (random.nextInt(4) + 1)
                 {
-                    case 1 -> shop.add(new pawn1());
-                    case 2 -> shop.add(new pawn2());
-                    case 3 -> shop.add(new pawn3());
-                    case 4 -> shop.add(new pawn4());
+                    case 1 -> shop.add(new Pawn1());
+                    case 2 -> shop.add(new Pawn2());
+                    case 3 -> shop.add(new Pawn3());
+                    case 4 -> shop.add(new Pawn4());
                     default -> System.out.println("RANDOM CLASS ERROR");
                 }
             }
         }
     }
 
-    void buyPawn(int shopIndex)
+    void buyPawn(Pawn pawn)
     {
         if (owner.playerBench.size() < owner.benchMax)
         {
-            if (gold >= shop.get(shopIndex).currentCost)
+            if (gold >= pawn.currentCost)
             {
-                owner.addPawn(shop.get(shopIndex));
-                shop.remove(shopIndex);
+                gold-=pawn.currentCost;
+                owner.addPawn(pawn);
+                shop.remove(pawn);
+
             }
+        }
+    }
+
+    void sellPawn(Pawn pawn)
+    {
+        gold += pawn.currentCost;
+        if(owner.playerBoard.contains(pawn))
+        {
+            owner.playerBoard.remove(pawn);
+        }
+        else
+        {
+            owner.playerBench.remove(pawn);
         }
     }
 
     void debugShop()
     {
         System.out.println("SHOP " + gold);
-        for (pawn i : shop)
+        for (Pawn i : shop)
         {
             System.out.print(i.name + " ");
         }

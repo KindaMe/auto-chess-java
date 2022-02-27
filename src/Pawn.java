@@ -1,4 +1,4 @@
-abstract class pawn
+abstract class Pawn
 {
     //---- default ----//
     String name;
@@ -58,6 +58,7 @@ abstract class pawn
     void tierUp()
     {
         tier++;
+        updateStats();
     }
 
     void engage()
@@ -93,9 +94,9 @@ abstract class pawn
 
 }
 
-class pawn1 extends pawn
+class Pawn1 extends Pawn
 {
-    pawn1()
+    Pawn1()
     {
         name = "Thanasis";
         defaultHealth = 100;
@@ -124,9 +125,9 @@ class pawn1 extends pawn
     }
 }
 
-class pawn2 extends pawn
+class Pawn2 extends Pawn
 {
-    pawn2()
+    Pawn2()
     {
         name = "Korina";
         defaultHealth = 80;
@@ -155,9 +156,9 @@ class pawn2 extends pawn
     }
 }
 
-class pawn3 extends pawn
+class Pawn3 extends Pawn
 {
-    pawn3()
+    Pawn3()
     {
         name = "Agapios";
         defaultHealth = 50;
@@ -186,9 +187,9 @@ class pawn3 extends pawn
     }
 }
 
-class pawn4 extends pawn
+class Pawn4 extends Pawn
 {
-    pawn4()
+    Pawn4()
     {
         name = "Ermis";
         defaultHealth = 70;

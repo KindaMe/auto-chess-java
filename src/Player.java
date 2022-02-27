@@ -2,12 +2,12 @@ import java.util.ArrayList;
 
 class Comparator
 {
-    ArrayList<pawn> source;
+    ArrayList<Pawn> source;
     int index;
     Class pawnClass;
     int tier;
 
-    Comparator(ArrayList<pawn> source, int index)
+    Comparator(ArrayList<Pawn> source, int index)
     {
         this.source = source;
         this.index = index;
@@ -25,7 +25,7 @@ class Comparator
         return false;
     }
 
-    public pawn getPawn()
+    public Pawn getPawn()
     {
         return source.get(index);
     }
@@ -36,26 +36,28 @@ class Comparator
     }
 }
 
-public class player
+public class Player
 {
-    shop playerShop = new shop(this);
+    Shop playerShop = new Shop(this);
     final int boardMax = 7;
-    ArrayList<pawn> playerBoard;
+    ArrayList<Pawn> playerBoard;
     final int benchMax = 9;
-    ArrayList<pawn> playerBench;
+    ArrayList<Pawn> playerBench;
 
-    player()
+    Player()
     {
-        playerBoard = new ArrayList<pawn>();
-        playerBench = new ArrayList<pawn>();
+        playerBoard = new ArrayList<>();
+        playerBench = new ArrayList<>();
     }
 
-    void addPawn(pawn toAdd)
+    void addPawn(Pawn toAdd)
     {
         if (playerBench.size() < benchMax)
         {
             playerBench.add(toAdd);
         }
+        merge();
+        merge();//temp fix, so it checks if merged t2 can merge into t3
     }
 
     void equipPawn(int benchIndex)
@@ -101,7 +103,7 @@ public class player
 
     void merge()
     {
-        ArrayList<Comparator> mergeList = new ArrayList<Comparator>();
+        ArrayList<Comparator> mergeList = new ArrayList<>();
 
         fillMergeList(mergeList);
 
@@ -152,14 +154,14 @@ public class player
     void debugLists()
     {
         System.out.println("BENCH");
-        for (pawn i : playerBench)
+        for (Pawn i : playerBench)
         {
             System.out.print(i.tier + i.name + " ");
         }
         System.out.println();
 
         System.out.println("BOARD");
-        for (pawn i : playerBoard)
+        for (Pawn i : playerBoard)
         {
             System.out.print(i.tier + i.name + " ");
         }

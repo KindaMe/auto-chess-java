@@ -1,21 +1,21 @@
-import java.util.ArrayList;
-
-public class main
+public class Main
 {
     public static void main(String[] args)
     {
         //---- DEBUG ----//
-        player player1 = new player();//create test player
+        Player player1 = new Player();//create test Player
 
         addPawnsTest(player1);
         equipTest(player1);
         engageTest(player1);
-        mergeTest(player1);
+        //mergeTest(player1);
         shopTest(player1);
         //---- DEBUG ----//
+
+        new Menu(player1);
     }
 
-    static void equipTest(player player1)
+    static void equipTest(Player player1)
     {
         //---- DEBUG ----//
         System.out.println("---- BEFORE EQUIP ----");
@@ -31,7 +31,7 @@ public class main
         System.out.println("---------------------");
     }
 
-    static void mergeTest(player player1)
+    static void mergeTest(Player player1)
     {
         //---- DEBUG ----//
         System.out.println("---- BEFORE MERGE ----");
@@ -44,21 +44,21 @@ public class main
         System.out.println("---------------------");
     }
 
-    static void addPawnsTest(player player1)
+    static void addPawnsTest(Player player1)
     {
         //---- DEBUG ----//
-        player1.addPawn(new pawn3());
-        player1.addPawn(new pawn2());
-        player1.addPawn(new pawn1());
-        player1.addPawn(new pawn1());
-        player1.addPawn(new pawn2());
-        player1.addPawn(new pawn3());
-        player1.addPawn(new pawn2());
-        player1.addPawn(new pawn3());
-        player1.addPawn(new pawn1());
+        player1.addPawn(new Pawn3());
+        player1.addPawn(new Pawn2());
+        player1.addPawn(new Pawn1());
+        player1.addPawn(new Pawn1());
+        player1.addPawn(new Pawn2());
+        player1.addPawn(new Pawn3());
+        player1.addPawn(new Pawn2());
+        player1.addPawn(new Pawn3());
+        player1.addPawn(new Pawn1());
     }
 
-    static void engageTest(player player1)
+    static void engageTest(Player player1)
     {
         //---- DEBUG ----//
         System.out.println("---- ENGAGE ----");
@@ -71,7 +71,7 @@ public class main
         System.out.println("----------------");
     }
 
-    static void shopTest(player player1)
+    static void shopTest(Player player1)
     {
         //---- DEBUG ----//
         System.out.println("---- BEFORE REFRESH ----");
@@ -82,14 +82,5 @@ public class main
         player1.playerShop.refreshShop();
         player1.playerShop.debugShop();
         System.out.println("-----------------------");
-
-        System.out.println("---- BEFORE BUY ----");
-        player1.playerShop.debugShop();
-        System.out.println("--------------------");
-
-        System.out.println("---- AFTER BUY ----");
-        player1.playerShop.buyPawn(1);
-        player1.playerShop.debugShop();
-        System.out.println("-------------------");
     }
 }
